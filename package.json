@@ -8,9 +8,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "postinstall": "npm run build-ts",
+    "postinstall": "yarn build",
     "dev": "nodemon -e ts --exec \"tsc && NODE_ENV=development node dist/index.js\"",
-    "build": "rimraf dist && tsc",
+    "build": "tsc",
     "test": "echo 'test successfully!!'"
   },
   "dependencies": {
