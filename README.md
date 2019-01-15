@@ -1,4 +1,4 @@
-# blog-server
+# shyroom-server
 
 A simple express server using TypeScript, MongoDB with mongoose, JsonWebToken.
 
