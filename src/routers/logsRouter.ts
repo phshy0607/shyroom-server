@@ -2,14 +2,14 @@ import { NextFunction, Request, Response, Router } from 'express'
 import * as fs from 'fs'
 import * as moment from 'moment'
 import * as path from 'path'
-import { logger, logPath } from '../middlewares/winston'
+import { logPath } from '../vendors/env'
+import { logger } from '../vendors/winston'
 
 interface ILogItem {
   message ?: string,
   level: string,
   timestamp: string
 }
-
 
 const getLogs: (filename: string) => Promise<Buffer> = (filename: string): Promise<Buffer> => {
   return new Promise((resolve: (data: Buffer) => void, reject: (err: NodeJS.ErrnoException) => void): void => {
@@ -38,7 +38,7 @@ const parseLog: (files: Buffer) => ILogItem[] = (files: Buffer): ILogItem[] => {
     }
   })
   .sort((a: ILogItem, b: ILogItem) => {
-    return moment(a.timestamp).diff(moment(b.timestamp)) < 0 ? 1 : -1
+    return moment(new Date(a.timestamp)).diff(moment(new Date(b.timestamp))) < 0 ? 1 : -1
   })
 }
 

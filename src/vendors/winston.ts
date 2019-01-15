@@ -2,15 +2,15 @@ import * as fs from 'fs'
 import { StreamOptions } from 'morgan'
 import * as path from 'path'
 import {createLogger, format, Logger, transports } from 'winston'
+import * as env from './env'
 /**
  * check if process.env.LOG_PATH exists
  * if target folder does not exists, create one
  */
-export const logPath: string = path.resolve(process.cwd(), 'logs')
 const checkLogsFolder: () => void = (): void => {
-  const isExists: boolean = fs.existsSync(logPath)
+  const isExists: boolean = fs.existsSync(env.logPath)
   if (!isExists) {
-    fs.mkdirSync(logPath)
+    fs.mkdirSync(env.logPath)
   }
 }
 
@@ -19,7 +19,7 @@ checkLogsFolder()
 const makeFileTransportOption: Function = (logginLevel: string, filename: string): transports.FileTransportOptions => {
   return {
     level: logginLevel,
-    filename: path.join(logPath, filename),
+    filename: path.join(env.logPath, filename),
     handleExceptions: true,
     maxsize: 5242880, //5MB
     maxFiles: 5,

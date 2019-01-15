@@ -1,16 +1,10 @@
-// import * as dotenv from 'dotenv'
-// const result: dotenv.DotenvConfigOutput = dotenv.config()
-// if (result.error) {
-//   throw result.error
-// }
-import { logger, logPath } from './middlewares/winston'
-
-// logger.info(`.env file is loaded. Results: `, result.parsed)
+import { port } from './vendors/env'
 
 import * as http from 'http'
 import { AddressInfo } from 'net'
 import { app } from './app'
-const port: number = normalizePort(process.env.PORT || 3000)
+import { logger } from './vendors/winston'
+
 app.set('port', port)
 
 const instance: http.Server = http.createServer(app)
@@ -19,14 +13,6 @@ instance.listen(port)
 
 instance.on('error', onError)
 instance.on('listening', onListening)
-
-function normalizePort(val: number | string): number {
-  if (typeof val === 'string') {
-    return parseInt(val, 10)
-  } else {
-    return val
-  }
-}
 
 function onError(error: NodeJS.ErrnoException): void {
   if (error.syscall !== 'listen') {
@@ -49,7 +35,5 @@ function onError(error: NodeJS.ErrnoException): void {
 
 function onListening(): void {
   const addr: AddressInfo | string = instance.address()
-  const bind: string =
-    typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`
   logger.info(`Application starts on port ${port}......`)
 }

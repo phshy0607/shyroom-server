@@ -1,14 +1,12 @@
 import * as bodyParser from 'body-parser'
 import * as compression from 'compression'
-import * as cookieParser from 'cookie-parser'
-import * as cors from 'cors'
 import * as express from 'express'
-import * as handlebars from 'express-handlebars'
 import * as helmet from 'helmet'
 import * as morgan from 'morgan'
 import * as path from 'path'
-import { logger, stream, logPath } from './middlewares/winston'
 import { logsRouter } from './routers/logsRouter'
+import { engine } from './vendors/handlebars'
+import { logger, stream } from './vendors/winston'
 
 class App {
   public instance: express.Application
@@ -22,44 +20,27 @@ class App {
   }
 
   private config(): void {
+    // set body-parser
     this.instance.use(bodyParser.urlencoded({ extended: true }))
     this.instance.use(bodyParser.json())
 
-    this.instance.use(cookieParser())
+    // set morgan
     this.instance.use(morgan(':method :url :status :res[content-length] - :response-time ms', {stream: stream}))
+
+    // set compression
     this.instance.use(compression())
+
+    // set helmet
     this.instance.use(helmet())
-    this.instance.use(cors())
 
+    // set view directory
     this.instance.set('views', path.join(__dirname, '../src/views'))
-    const hbsInstance: Exphbs = handlebars.create({
-      // Specify helpers which are only registered on this instance.
-      helpers: {
-          iter: (context: object[], options: {fn: Function; inverse: Function}): string => {
-            const fn: Function = options.fn
-            const inverse: Function = options.inverse
-            let ret: string = ''
 
-            if (context && context.length > 0) {
-              for (let i: number = 0; i < context.length; i = i + 1) {
-                ret = ret + fn({
-                  ...context[i],
-                  i: i,
-                  iPlus1: i + 1
-                })
-              }
-            } else {
-              ret = inverse(this)
-            }
-
-            return ret
-          }
-      },
-      defaultLayout: 'main',
-      layoutsDir: path.join(__dirname, '../src/views/layouts')
-  })
-    this.instance.engine('handlebars', hbsInstance.engine)
+    // set view engine
+    this.instance.engine('handlebars', engine)
     this.instance.set('view engine', 'handlebars')
+
+    // enable cache
     if (process.env.NODE_ENV === 'production') {
       this.instance.enable('view cache')
     }
@@ -73,8 +54,7 @@ class App {
     // set up error handling
     this.instance.get('/', (req: express.Request, res: express.Response) => {
       res.json({
-        mode: process.env.NODE_ENV,
-        logpath: logPath
+        mode: process.env.NODE_ENV
       })
     })
 
