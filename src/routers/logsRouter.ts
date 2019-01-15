@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from 'express'
 import * as fs from 'fs'
 import * as moment from 'moment'
 import * as path from 'path'
-import { logger } from '../middlewares/winston'
+import { logger, logPath } from '../middlewares/winston'
 
 interface ILogItem {
   message ?: string,
@@ -10,9 +10,10 @@ interface ILogItem {
   timestamp: string
 }
 
+
 const getLogs: (filename: string) => Promise<Buffer> = (filename: string): Promise<Buffer> => {
   return new Promise((resolve: (data: Buffer) => void, reject: (err: NodeJS.ErrnoException) => void): void => {
-    fs.readFile(path.join(process.env.LOG_PATH, filename), 'utf-8', (err: NodeJS.ErrnoException, data: Buffer) => {
+    fs.readFile(path.join(logPath, filename), 'utf-8', (err: NodeJS.ErrnoException, data: Buffer) => {
       if (err) {
         reject(err)
       } else {

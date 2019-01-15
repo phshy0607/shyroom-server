@@ -7,7 +7,7 @@ import * as handlebars from 'express-handlebars'
 import * as helmet from 'helmet'
 import * as morgan from 'morgan'
 import * as path from 'path'
-import { logger, stream } from './middlewares/winston'
+import { logger, stream, logPath } from './middlewares/winston'
 import { logsRouter } from './routers/logsRouter'
 
 class App {
@@ -74,7 +74,7 @@ class App {
     this.instance.get('/', (req: express.Request, res: express.Response) => {
       res.json({
         mode: process.env.NODE_ENV,
-        logpath: process.env.LOG_PATH
+        logpath: logPath
       })
     })
 

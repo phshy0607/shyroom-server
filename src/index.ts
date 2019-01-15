@@ -3,7 +3,7 @@
 // if (result.error) {
 //   throw result.error
 // }
-import { logger } from './middlewares/winston'
+import { logger, logPath } from './middlewares/winston'
 
 // logger.info(`.env file is loaded. Results: `, result.parsed)
 

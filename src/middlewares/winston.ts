@@ -6,10 +6,11 @@ import {createLogger, format, Logger, transports } from 'winston'
  * check if process.env.LOG_PATH exists
  * if target folder does not exists, create one
  */
+export const logPath: string = path.resolve(process.cwd(), 'logs')
 const checkLogsFolder: () => void = (): void => {
-  const isExists: boolean = fs.existsSync(process.env.LOG_PATH)
+  const isExists: boolean = fs.existsSync(logPath)
   if (!isExists) {
-    fs.mkdirSync(process.env.LOG_PATH)
+    fs.mkdirSync(logPath)
   }
 }
 
@@ -18,7 +19,7 @@ checkLogsFolder()
 const makeFileTransportOption: Function = (logginLevel: string, filename: string): transports.FileTransportOptions => {
   return {
     level: logginLevel,
-    filename: path.join(process.env.LOG_PATH, filename),
+    filename: path.join(logPath, filename),
     handleExceptions: true,
     maxsize: 5242880, //5MB
     maxFiles: 5,
