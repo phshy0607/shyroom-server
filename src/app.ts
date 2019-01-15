@@ -79,10 +79,6 @@ class App {
     })
 
     this.instance.use('/logs', logsRouter)
-
-    // set up mapping for docs
-    this.instance.use('/docs', express.static(path.join(__dirname, 'docs')))
-
     logger.debug('Application routers installed......')
   }
 }
