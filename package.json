@@ -15,7 +15,8 @@
     "app:dev": "nodemon -e ts --exec \"tsc && NODE_ENV=development node build/index.js\"",
     "app:build": "tsc",
     "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "docs:build": "vuepress build docs",
+    "test": "echo 'test successfully!!'"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
