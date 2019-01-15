@@ -10,9 +10,9 @@
   "scripts": {
     "deploy": "pm2 deploy ecosystem.config.js production setup",
     "deploy:update": "pm2 deploy ecosystem.config.js production update",
-    "dev": "nodemon -e ts --exec \"tsc && concurrently 'yarn docs:dev' 'NODE_ENV=development node build/index.js'\"",
-    "build": "rimraf build && concurrently 'yarn app:build' 'yarn docs:build'",
-    "app:dev": "nodemon -e ts --exec \"tsc && NODE_ENV=development node build/index.js\"",
+    "dev": "nodemon -e ts --exec \"tsc && concurrently 'yarn docs:dev' 'NODE_ENV=development node dist/index.js'\"",
+    "build": "rimraf dist && concurrently 'yarn app:build' 'yarn docs:build'",
+    "app:dev": "nodemon -e ts --exec \"tsc && NODE_ENV=development node dist/index.js\"",
     "app:build": "tsc",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
