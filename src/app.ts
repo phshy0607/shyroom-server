@@ -54,6 +54,7 @@ class App {
     // set up error handling
     this.instance.get('/', (req: express.Request, res: express.Response) => {
       res.json({
+        message: 'express app started',
         mode: process.env.NODE_ENV
       })
     })
