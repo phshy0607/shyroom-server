@@ -16,6 +16,7 @@ app.set('port', port)
 const instance: http.Server = http.createServer(app)
 
 instance.listen(port)
+
 instance.on('error', onError)
 instance.on('listening', onListening)
 
