@@ -1,3 +1,4 @@
+<input type="button" onclick="deleteLogs()" value="EMPTY">
 <table class="table">
   <thead>
     <tr>
@@ -18,3 +19,15 @@
     {{/iter}}
   </tbody>
 </table>
+
+<script type="text/javascript">
+  function deleteLogs () {
+    $.ajax({
+      url: '/logs',
+      type: 'delete',
+      success: function (res) {
+        console.log(res)
+      }
+    })
+  }
+</script>

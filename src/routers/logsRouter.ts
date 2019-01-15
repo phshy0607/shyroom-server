@@ -11,7 +11,7 @@ interface ILogItem {
   timestamp: string
 }
 
-const getLogs: (filename: string) => Promise<Buffer> = (filename: string): Promise<Buffer> => {
+const readLogs: (filename: string) => Promise<Buffer> = (filename: string): Promise<Buffer> => {
   return new Promise((resolve: (data: Buffer) => void, reject: (err: NodeJS.ErrnoException) => void): void => {
     fs.readFile(path.join(logPath, filename), 'utf-8', (err: NodeJS.ErrnoException, data: Buffer) => {
       if (err) {
@@ -45,7 +45,7 @@ const parseLog: (files: Buffer) => ILogItem[] = (files: Buffer): ILogItem[] => {
 const logsRouter: Router = Router()
 
 logsRouter.get('/', (req: Request, res: Response, next: NextFunction) => {
-  getLogs('all-logs.log')
+  readLogs('all-logs.log')
   .then(parseLog)
   .then((results: ILogItem[]) => {
     res.render('logs', {
@@ -58,7 +58,7 @@ logsRouter.get('/', (req: Request, res: Response, next: NextFunction) => {
 })
 
 logsRouter.get('/error', (req: Request, res: Response, next: NextFunction) => {
-  getLogs('error-logs.log')
+  readLogs('error-logs.log')
   .then(parseLog)
   .then((results: ILogItem[]) => {
     res.render('logs', {
@@ -69,4 +69,28 @@ logsRouter.get('/error', (req: Request, res: Response, next: NextFunction) => {
     logger.error(err)
   })
 })
+
+logsRouter.delete('/', (req: Request, res: Response) => {
+  const clearContent: (fileName: string) => Promise<undefined> = (filename: string): Promise<undefined> => {
+    return new Promise((resolve: Function, reject: Function): void => {
+      fs.writeFile(path.join(logPath, filename), '', (err: NodeJS.ErrnoException) => {
+        if (err) {
+          logger.error(err)
+          reject(err)
+        } else {
+          logger.info(`log file ${filename} cleared`)
+          resolve()
+        }
+      })
+    })
+  }
+
+  const task: Promise<undefined>[] = [clearContent('all-logs.log'), clearContent('error-logs.log')]
+
+  Promise.all(task).then(() => {
+    res.status(200)
+  }).catch(logger.error)
+
+})
+
 export { logsRouter }
