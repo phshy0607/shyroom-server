@@ -10,7 +10,9 @@
   "scripts": {
     "dev": "rimraf dist && nodemon -e ts --exec \"tsc && set NODE_ENV=development&& node dist/index.js \"",
     "build": "rimraf dist && tsc",
-    "test": "echo 'test successfully!!'"
+    "test": "echo 'test successfully!!'",
+    "deploy": "pm2 deploy ecosystem.config.js production setup",
+    "deploy:update": "pm2 deploy ecosystem.config.js production update"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
