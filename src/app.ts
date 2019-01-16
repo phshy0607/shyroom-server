@@ -59,6 +59,12 @@ class App {
       })
     })
 
+    this.instance.post('/githook', (req: express.Request, res: express.Response) => {
+      res.json({
+        message: 'bingo'
+      })
+    })
+
     this.instance.use('/logs', logsRouter)
     logger.debug('Application routers installed......')
   }
