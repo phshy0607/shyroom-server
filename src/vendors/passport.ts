@@ -113,7 +113,10 @@ const strategyFunction: VerifyCallback = (payload: IUser, done: Function): void 
  * @param username a username for user
  */
 const generateJWT: (username: string) => string = (username: string): string => {
-  return jwt.sign({ username: username }, SECRET_KEY)
+  return jwt.sign({ username: username }, SECRET_KEY, {
+    algorithm: 'HS256',
+    expiresIn: '1h'
+  })
 }
 
 passport.use(
