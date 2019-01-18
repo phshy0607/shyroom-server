@@ -14,7 +14,7 @@ export let userSchema: Schema = new Schema(
       unique: true,
       trim: true
     },
-    password: { type: String, required: true, unique: true, trim: true },
+    password: { type: String, required: true, trim: true },
     nickname: String
   },
   { timestamps: true }
