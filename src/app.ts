@@ -1,29 +1,14 @@
 import * as compression from 'compression'
 import * as express from 'express'
 import * as helmet from 'helmet'
-import * as jwt from 'jsonwebtoken'
 import * as morgan from 'morgan'
 import * as path from 'path'
 import { authRouter } from './routers/authRouter'
 import { logsRouter } from './routers/logsRouter'
 import { engine } from './vendors/handlebars'
-
+import { connectDB } from './vendors/mongoose'
 import { passport } from './vendors/passport'
 import { logger, stream } from './vendors/winston'
-import * as mongoose from 'mongoose'
-
-mongoose.connect('mongodb://127.0.0.1:27017')
-logger.info('yo')
-const db: mongoose.Connection = mongoose.connection
-
-db.on('error', (err) => {
-  logger.error(err || 'aaa')
-})
-db.once('open', () => {
-  logger.info('open connection on mongoDB')
-})
-
-export { mongoose }
 
 class App {
   public instance: express.Application
@@ -37,38 +22,32 @@ class App {
   }
 
   private config(): void {
+    // connect mongodb
+    connectDB()
     // set express bulit-in body-parser
     this.instance.use(express.urlencoded({ extended: true }))
     this.instance.use(express.json())
-
     // set morgan
     this.instance.use(
       morgan(':method :url :status :res[content-length] - :response-time ms', {
         stream: stream
       })
     )
-
     // set compression
     this.instance.use(compression())
-
     // set helmet
     this.instance.use(helmet())
-
     // set passport
     this.instance.use(passport.initialize())
-
     // set view directory
     this.instance.set('views', path.join(__dirname, '../src/views'))
-
     // set view engine
     this.instance.engine('handlebars', engine)
     this.instance.set('view engine', 'handlebars')
-
     // enable cache
     if (process.env.NODE_ENV === 'production') {
       this.instance.enable('view cache')
     }
-
     logger.debug('Application configured...... ')
   }
 

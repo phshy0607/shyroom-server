@@ -112,8 +112,8 @@ const strategyFunction: VerifyCallback = (payload: IUser, done: Function): void 
  * a method that generates JWT
  * @param username a username for user
  */
-const generateJWT: (username: string) => string = (username: string): string => {
-  return jwt.sign({ username: username }, SECRET_KEY, {
+const generateJWT: (user: Shyroom.IUser) => string = (user: Shyroom.IUser): string => {
+  return jwt.sign(user, SECRET_KEY, {
     algorithm: 'HS256',
     expiresIn: '1h'
   })

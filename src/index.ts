@@ -35,5 +35,5 @@ function onError(error: NodeJS.ErrnoException): void {
 
 function onListening(): void {
   const addr: AddressInfo | string = instance.address()
-  logger.info(`Application starts on port ${port}......`)
+  logger.debug(`Application starts on port ${port}......`)
 }

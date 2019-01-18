@@ -1,10 +1,28 @@
 import { NextFunction, Request, Response, Router } from 'express'
-import * as fs from 'fs'
-import * as moment from 'moment'
+import { IUserModel, userModel } from '../db/user'
 import { generateJWT, passport } from '../vendors/passport'
 import { logger } from '../vendors/winston'
-
 const authRouter: Router = Router()
+
+authRouter.post('/register', (req: Request, res: Response) => {
+  const user: Shyroom.IUser = {
+    username: req.body.username,
+    password: req.body.password,
+    nickname: req.body.nickname || ''
+  }
+  userModel
+    .create(user)
+    .then((data: IUserModel) => {
+      res.json({
+        message: `User <${data.username}> has been registered`,
+        user: data
+      })
+    })
+    .catch((err: Error) => {
+      logger.error(err.message)
+      res.sendStatus(500)
+    })
+})
 
 authRouter.post('/login', (req: Request, res: Response) => {
   const username: string = req.body.username
@@ -12,39 +30,43 @@ authRouter.post('/login', (req: Request, res: Response) => {
 
   logger.info(`A user <${username}> requests login`)
 
-  const checkUser: (un: string, ps: string) => Boolean = (
+  const checkUser: (un: string, ps: string) => Promise<Shyroom.IUser> = (
     un: string,
     ps: string
-  ): Boolean => {
-    if (un === 'admin' && ps === '111') {
-      return true
-    } else {
-      return false
-    }
+  ): Promise<Shyroom.IUser> => {
+    return new Promise<Shyroom.IUser>(
+      (resolve: Function, reject: Function): void => {
+        userModel
+          .findOne({ username: un, password: ps })
+          .then((data: IUserModel | null) => {
+            if (data === null) {
+              reject(new Error('incorrect username or password'))
+            } else {
+              resolve({
+                _id: data._id,
+                username: data.username
+              })
+            }
+          })
+          .catch((err: Error) => {
+            logger.error(err.message)
+          })
+      }
+    )
   }
 
-  if (checkUser(username, password) === true) {
+  checkUser(username, password).then((payload: Shyroom.IUser) => {
     res.json({
-      token: generateJWT(username),
+      token: generateJWT(payload),
       message: 'logined successfully, use this token for further requests'
     })
-  } else {
-    res.sendStatus(400)
-  }
-})
-
-authRouter.post('/register', (req: Request, res: Response) => {
-  res.json({
-    message: 'yes'
+  }).catch((err: Error) => {
+    res.sendStatus(401)
   })
 })
 
 authRouter.get(
   '/protected',
-  (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.headers.authorization)
-    next()
-  },
   passport.authenticate('jwt', { session: false }),
   (req: Request, res: Response) => {
     res.json({
