@@ -1,14 +1,6 @@
 # shyroom-server
 
-A simple express server using TypeScript, MongoDB with mongoose, JsonWebToken.
+A Express.js server built with TypeScript.
 
-## Installation
+This is the server that boosts my dashboard.
 
-```
-yarn // install dependencies
-
-yarn build // compile ts to js
-
-yarn server // watch and run
-
-```
