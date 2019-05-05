@@ -62,7 +62,7 @@ class App {
       })
     })
 
-    this.instance.use('/api', authRouter)
+    this.instance.use('/auth', authRouter)
     this.instance.use('/logs', logsRouter)
     logger.debug('Application routers installed......')
   }

@@ -24,7 +24,7 @@
       "esnext.asynciterable"
     ],
     "target": "es5",
-    "sourceMap": false,
+    "sourceMap": true,
     "noImplicitAny": false,
     "noImplicitReturns": false,
     "noImplicitThis": false,

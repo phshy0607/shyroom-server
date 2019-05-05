@@ -20,7 +20,8 @@ authRouter.post('/register', (req: Request, res: Response) => {
     })
     .catch((err: Error) => {
       logger.error(err.message)
-      res.sendStatus(500)
+      // TODO: username 重复的异常处理。
+      res.status(500)
     })
 })
 

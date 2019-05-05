@@ -10,7 +10,12 @@ export let userSchema: Schema = new Schema({
     unique: true,
     trim: true
   },
-  password: { type: String, required: true, trim: true },
+  password: { 
+    type: String, 
+    required: true,
+    trim: true,
+    unique: false 
+  },
   nickname: String
 },{ timestamps: true })
 
