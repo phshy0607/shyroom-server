@@ -1,13 +1,13 @@
 declare namespace Express {
   export interface Request {
-     token?: string
+    token?: string;
   }
 }
 
 declare namespace Shyroom {
-  export interface IUser {
-    username: string,
-    nickname?: string
-    password?: string
+  export interface User {
+    username: string;
+    nickname?: string;
+    password?: string;
   }
 }

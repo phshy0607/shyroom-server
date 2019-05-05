@@ -1,18 +1,18 @@
-import { NextFunction, Request, Response, Router } from 'express'
-import { IUserModel, userModel } from '../db/user'
-import { generateJWT, passport } from '../vendors/passport'
-import { logger } from '../vendors/winston'
+import { Request, Response, Router } from 'express'
+import { UserModel, userModel } from '../db/user'
+import { generateJWT, passport } from '../middlewares/passport'
+import { logger } from '../middlewares/winston'
 const authRouter: Router = Router()
 
 authRouter.post('/register', (req: Request, res: Response) => {
-  const user: Shyroom.IUser = {
+  const user: Shyroom.User = {
     username: req.body.username,
     password: req.body.password,
     nickname: req.body.nickname || ''
   }
   userModel
     .create(user)
-    .then((data: IUserModel) => {
+    .then((data: UserModel) => {
       res.json({
         message: `User <${data.username}> has been registered`,
         user: data
@@ -30,15 +30,15 @@ authRouter.post('/login', (req: Request, res: Response) => {
 
   logger.info(`A user <${username}> requests login`)
 
-  const checkUser: (un: string, ps: string) => Promise<Shyroom.IUser> = (
+  const checkUser: (un: string, ps: string) => Promise<Shyroom.User> = (
     un: string,
     ps: string
-  ): Promise<Shyroom.IUser> => {
-    return new Promise<Shyroom.IUser>(
+  ): Promise<Shyroom.User> => {
+    return new Promise<Shyroom.User>(
       (resolve: Function, reject: Function): void => {
         userModel
           .findOne({ username: un, password: ps })
-          .then((data: IUserModel | null) => {
+          .then((data: UserModel | null) => {
             if (data === null) {
               reject(new Error('incorrect username or password'))
             } else {
@@ -55,12 +55,13 @@ authRouter.post('/login', (req: Request, res: Response) => {
     )
   }
 
-  checkUser(username, password).then((payload: Shyroom.IUser) => {
+  checkUser(username, password).then((payload: Shyroom.User) => {
     res.json({
       token: generateJWT(payload),
       message: 'logined successfully, use this token for further requests'
     })
   }).catch((err: Error) => {
+    logger.error(err)
     res.sendStatus(401)
   })
 })

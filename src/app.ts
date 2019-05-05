@@ -3,25 +3,25 @@ import * as express from 'express'
 import * as helmet from 'helmet'
 import * as morgan from 'morgan'
 import * as path from 'path'
+import { engine } from './middlewares/handlebars'
+import { connectDB } from './middlewares/mongoose'
+import { passport } from './middlewares/passport'
+import { logger, stream } from './middlewares/winston'
 import { authRouter } from './routers/authRouter'
 import { logsRouter } from './routers/logsRouter'
-import { engine } from './vendors/handlebars'
-import { connectDB } from './vendors/mongoose'
-import { passport } from './vendors/passport'
-import { logger, stream } from './vendors/winston'
 
 class App {
   public instance: express.Application
-  public name: String
+  public name: string
 
-  constructor() {
+  constructor () {
     this.name = 'Blog Server'
     this.instance = express()
     this.config()
     this.routes()
   }
 
-  private config(): void {
+  private config (): void {
     // connect mongodb
     connectDB()
     // set express bulit-in body-parser
@@ -51,7 +51,7 @@ class App {
     logger.debug('Application configured...... ')
   }
 
-  private routes(): void {
+  private routes (): void {
     // set up routes
 
     // set up error handling

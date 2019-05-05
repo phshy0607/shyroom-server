@@ -1,7 +1,8 @@
 {
-  "tslint.enable":true,
-  "tslint.alwaysShowRuleFailuresAsWarnings": true,
-  "tslint.alwaysShowStatus": true,
-  "tslint.packageManager": "yarn",
-  "prettier.tslintIntegration": true
+  "eslint.enable": true,
+  "eslint.packageManager": "yarn",
+  "eslint.validate": [
+    "javascript",
+    "typescript"
+  ]
 }
